@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Admin Panel — খবর বাংলা</title>
+<meta name="robots" content="noindex, nofollow" />
+<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob: gap:; script-src * 'unsafe-inline' 'unsafe-eval'; style-src * 'unsafe-inline'; connect-src *; img-src * data: blob:; font-src * data:;">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   ADMIN PANEL — Complete Styles
+   ============================================================ */
+:root{
+  --pri:#C8102E; --pri-d:#8B0A1F; --pri-l:#FEE2E2;
+  --ok:#10B981; --warn:#F59E0B; --err:#EF4444; --info:#3B82F6;
+  --ink:#111827; --ink-2:#374151; --gray:#6B7280; --gray-l:#9CA3AF;
+  --bg:#F3F4F6; --card:#FFFFFF; --soft:#F9FAFB; --line:#E5E7EB;
+  --sidebar:#1F2937; --sidebar-2:#111827;
+  --r:10px; --r-sm:6px; --r-lg:16px;
+  --sh:0 1px 3px rgba(0,0,0,.06); --sh-2:0 10px 30px rgba(0,0,0,.1);
+  --font:'Hind Siliguri','Inter',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:var(--font);background:var(--bg);color:var(--ink);
+  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;
+}
+button,input,textarea,select{font-family:inherit;font-size:inherit;color:inherit;outline:none}
+button{cursor:pointer;border:none;background:none}
+a{color:var(--pri);text-decoration:none}
+a:hover{text-decoration:underline}
+img{max-width:100%;display:block}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:#D1D5DB;border-radius:9px}
+
+/* ---------- Login Screen ---------- */
+#loginScreen{
+  position:fixed;inset:0;display:grid;place-items:center;
+  background:linear-gradient(135deg,#1F2937 0%,#111827 100%);
+  padding:20px;z-index:1000;
+}
+.login-card{
+  background:#fff;border-radius:var(--r-lg);padding:36px 32px;
+  width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.3);
+}
+.login-card .logo{
+  width:64px;height:64px;border-radius:16px;background:var(--pri);
+  color:#fff;font-weight:800;font-size:28px;display:grid;place-items:center;
+  margin:0 auto 20px;
+}
+.login-card h1{font-size:24px;font-weight:800;text-align:center;margin-bottom:6px}
+.login-card .sub{text-align:center;color:var(--gray);font-size:14px;margin-bottom:28px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px;color:var(--ink-2)}
+.field input,.field textarea,.field select{
+  width:100%;height:44px;border:1.5px solid var(--line);border-radius:var(--r-sm);
+  padding:0 14px;font-size:15px;background:#fff;transition:.15s;
+}
+.field textarea{height:auto;min-height:100px;padding:10px 14px;resize:vertical}
+.field input:focus,.field textarea:focus,.field select:focus{
+  border-color:var(--pri);box-shadow:0 0 0 3px rgba(200,16,46,.08);
+}
+.btn{
+  height:44px;border-radius:var(--r-sm);padding:0 20px;
+  font-weight:700;font-size:15px;transition:.15s;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn:active{transform:scale(.97)}
+.btn-pri{background:var(--pri);color:#fff;width:100%}
+.btn-pri:hover{background:var(--pri-d)}
+.btn-pri:disabled{opacity:.6;pointer-events:none}
+.btn-ghost{background:var(--soft);color:var(--ink-2);border:1.5px solid var(--line)}
+.btn-ghost:hover{background:var(--line)}
+.btn-ok{background:var(--ok);color:#fff}
+.btn-err{background:var(--err);color:#fff}
+.btn-sm{height:36px;padding:0 14px;font-size:13.5px}
+
+/* ---------- Admin Layout ---------- */
+#adminApp{display:none;min-height:100vh}
+#adminApp.show{display:flex}
+
+.sidebar{
+  width:250px;background:var(--sidebar);color:#E5E7EB;
+  display:flex;flex-direction:column;flex-shrink:0;
+  position:fixed;top:0;bottom:0;left:0;z-index:100;
+  transition:transform .25s;
+}
+.sidebar .brand{
+  padding:20px;border-bottom:1px solid rgba(255,255,255,.08);
+  display:flex;align-items:center;gap:12px;
+}
+.sidebar .brand .logo{
+  width:40px;height:40px;border-radius:10px;background:var(--pri);
+  color:#fff;font-weight:800;font-size:18px;display:grid;place-items:center;flex-shrink:0;
+}
+.sidebar .brand .txt h2{font-size:16px;font-weight:800;color:#fff}
+.sidebar .brand .txt p{font-size:11px;color:#9CA3AF;margin-top:2px}
+.sidebar nav{padding:14px 10px;flex:1;overflow-y:auto}
+.sidebar nav a{
+  display:flex;align-items:center;gap:12px;padding:11px 14px;
+  border-radius:var(--r-sm);font-size:14.5px;font-weight:600;
+  color:#D1D5DB;cursor:pointer;margin-bottom:2px;transition:.15s;
+  text-decoration:none;
+}
+.sidebar nav a:hover{background:rgba(255,255,255,.06);color:#fff}
+.sidebar nav a.on{background:var(--pri);color:#fff}
+.sidebar nav a .ic{font-size:18px;width:22px;text-align:center}
+.sidebar nav .divider{
+  padding:14px 14px 6px;font-size:11px;font-weight:800;color:#6B7280;
+  letter-spacing:.8px;text-transform:uppercase;
+}
+.sidebar .user{
+  padding:14px;border-top:1px solid rgba(255,255,255,.08);
+  display:flex;align-items:center;gap:10px;font-size:13px;
+}
+.sidebar .user .av{
+  width:36px;height:36px;border-radius:50%;background:var(--pri);
+  display:grid;place-items:center;font-weight:800;color:#fff;flex-shrink:0;
+}
+.sidebar .user .em{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#9CA3AF}
+
+.main{flex:1;margin-left:250px;min-width:0;display:flex;flex-direction:column}
+.topbar{
+  background:#fff;border-bottom:1px solid var(--line);
+  padding:14px 24px;display:flex;align-items:center;gap:14px;
+  position:sticky;top:0;z-index:50;box-shadow:var(--sh);
+}
+.topbar h1{font-size:20px;font-weight:800;flex:1}
+.topbar .menu-btn{display:none;font-size:22px;color:var(--ink-2)}
+.topbar .actions{display:flex;gap:8px;align-items:center}
+.live-dot{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:12px;font-weight:700;color:var(--ok);
+  padding:5px 12px;border-radius:20px;background:#ECFDF5;
+}
+.live-dot::before{
+  content:'';width:7px;height:7px;border-radius:50%;background:var(--ok);
+  animation:pulse 1.5s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+.content{padding:24px;flex:1}
+
+/* ---------- Cards / Grid ---------- */
+.card{
+  background:var(--card);border-radius:var(--r);box-shadow:var(--sh);
+  padding:20px;margin-bottom:20px;
+}
+.card h3{
+  font-size:17px;font-weight:800;margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;
+}
+.card h3::before{content:'▎';color:var(--pri);font-weight:800}
+
+.stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:16px;margin-bottom:24px;
+}
+.stat{
+  background:#fff;border-radius:var(--r);padding:18px;box-shadow:var(--sh);
+  display:flex;align-items:center;gap:14px;
+}
+.stat .ic{
+  width:48px;height:48px;border-radius:12px;display:grid;place-items:center;
+  font-size:22px;flex-shrink:0;
+}
+.stat .ic.b1{background:#FEE2E2;color:#C8102E}
+.stat .ic.b2{background:#DBEAFE;color:#2563EB}
+.stat .ic.b3{background:#D1FAE5;color:#059669}
+.stat .ic.b4{background:#FEF3C7;color:#D97706}
+.stat .num{font-size:24px;font-weight:800;line-height:1.1}
+.stat .lbl{font-size:13px;color:var(--gray);font-weight:600;margin-top:2px}
+
+/* ---------- Forms ---------- */
+.row{display:grid;gap:16px}
+@media(min-width:640px){
+  .row-2{grid-template-columns:1fr 1fr}
+  .row-3{grid-template-columns:1fr 1fr 1fr}
+}
+.form-group{margin-bottom:18px}
+.form-group label{
+  display:block;font-size:13.5px;font-weight:700;margin-bottom:7px;color:var(--ink-2);
+}
+.form-group input,.form-group textarea,.form-group select{
+  width:100%;height:44px;border:1.5px solid var(--line);border-radius:var(--r-sm);
+  padding:0 14px;font-size:15px;background:#fff;transition:.15s;
+}
+.form-group textarea{height:auto;min-height:120px;padding:12px 14px;resize:vertical;line-height:1.6}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{
+  border-color:var(--pri);box-shadow:0 0 0 3px rgba(200,16,46,.08);
+}
+.form-group .editor{border:1.5px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.form-group .editor:focus-within{border-color:var(--pri);box-shadow:0 0 0 3px rgba(200,16,46,.08)}
+.form-group .editor textarea{
+  border:none;border-radius:0;min-height:300px;
+  font-family:'Consolas','Monaco',monospace;font-size:14px;
+}
+.form-group .editor textarea:focus{box-shadow:none}
+.form-group .toolbar{
+  background:var(--soft);padding:6px;border-bottom:1px solid var(--line);
+  display:flex;gap:4px;flex-wrap:wrap;
+}
+.form-group .toolbar button{
+  padding:6px 10px;border-radius:5px;font-size:13px;font-weight:700;
+  color:var(--ink-2);background:transparent;
+}
+.form-group .toolbar button:hover{background:var(--line)}
+.form-group .toolbar button.fmt{font-family:serif;font-style:italic;font-weight:700}
+
+.checkbox-wrap{
+  display:flex;align-items:center;gap:8px;font-size:14px;
+  padding:8px 0;cursor:pointer;font-weight:600;
+}
+.checkbox-wrap input{width:18px;height:18px;accent-color:var(--pri);cursor:pointer}
+
+/* ---------- Table ---------- */
+.table-wrap{overflow-x:auto;border-radius:var(--r);background:#fff}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line)}
+th{background:var(--soft);font-weight:800;font-size:12.5px;color:var(--gray);text-transform:uppercase;letter-spacing:.5px}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--soft)}
+td img.thumb{width:44px;height:44px;border-radius:8px;object-fit:cover;background:var(--soft)}
+td .row-actions{display:flex;gap:6px}
+td .row-actions button{
+  padding:6px 10px;border-radius:6px;font-size:12.5px;font-weight:700;
+  background:var(--soft);color:var(--ink-2);
+}
+td .row-actions button:hover{background:var(--line)}
+td .row-actions .del{background:#FEE2E2;color:var(--err)}
+td .row-actions .del:hover{background:var(--err);color:#fff}
+td .row-actions .edit{background:#DBEAFE;color:var(--info)}
+td .row-actions .edit:hover{background:var(--info);color:#fff}
+
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:800}
+.badge.ok{background:#D1FAE5;color:#059669}
+.badge.warn{background:#FEF3C7;color:#D97706}
+.badge.err{background:#FEE2E2;color:#DC2626}
+.badge.info{background:#DBEAFE;color:#2563EB}
+.badge.gray{background:var(--soft);color:var(--gray)}
+
+/* ---------- Ad Position Guide ---------- */
+.pos-guide{
+  background:#FEF2F2;border:1.5px solid #FECACA;border-radius:var(--r);
+  padding:18px;margin-bottom:20px;
+}
+.pos-guide h4{font-size:14px;font-weight:800;color:var(--pri);margin-bottom:12px}
+.pos-guide table{font-size:13px}
+.pos-guide th{background:#FEE2E2;color:var(--pri)}
+.pos-guide th,.pos-guide td{padding:8px 12px;border-bottom:1px solid #FECACA}
+.pos-guide code{
+  background:#fff;padding:2px 8px;border-radius:4px;
+  font-family:'Consolas',monospace;font-size:12.5px;color:var(--pri-d);
+  font-weight:700;border:1px solid #FECACA;
+}
+
+/* ---------- Image Preview ---------- */
+.img-preview{
+  width:100%;max-width:280px;height:auto;border-radius:var(--r-sm);
+  border:1.5px solid var(--line);margin-top:10px;
+}
+
+/* ---------- Toast ---------- */
+#toasts{
+  position:fixed;top:20px;right:20px;z-index:9999;
+  display:flex;flex-direction:column;gap:10px;max-width:360px;
+}
+.toast{
+  background:#fff;border-radius:var(--r);padding:14px 18px;
+  box-shadow:0 10px 30px rgba(0,0,0,.15);font-size:14px;font-weight:600;
+  display:flex;align-items:center;gap:10px;border-left:4px solid var(--info);
+  animation:tin .3s ease;
+}
+.toast.ok{border-left-color:var(--ok)}
+.toast.err{border-left-color:var(--err)}
+.toast.warn{border-left-color:var(--warn)}
+.toast .ic{font-size:18px}
+@keyframes tin{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
+
+/* ---------- Modal ---------- */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;
+  display:grid;place-items:center;padding:20px;animation:fi .2s;
+}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+.modal{
+  background:#fff;border-radius:var(--r-lg);padding:24px;
+  width:100%;max-width:520px;box-shadow:var(--sh-2);max-height:90vh;overflow-y:auto;
+}
+.modal h3{font-size:18px;font-weight:800;margin-bottom:16px}
+.modal .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+
+.hide{display:none !important}
+.muted{color:var(--gray)}
+.small{font-size:13px}
+.mt-2{margin-top:12px}.mt-3{margin-top:20px}
+.text-c{text-align:center}
+
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .topbar .menu-btn{display:block}
+  .content{padding:16px}
+  .topbar{padding:12px 16px}
+}
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="logo">খ</div>
+    <h1>Admin Panel</h1>
+    <p class="sub">খবর বাংলা — নিউজ পোর্টাল ম্যানেজমেন্ট</p>
+    <div class="field">
+      <label>ইমেইল</label>
+      <input id="loginEmail" type="email" placeholder="admin@example.com" autocomplete="username">
+    </div>
+    <div class="field">
+      <label>পাসওয়ার্ড</label>
+      <input id="loginPass" type="password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn btn-pri" id="loginBtn" onclick="doLogin()">🔐 লগইন করুন</button>
+    <p class="text-c small muted" style="margin-top:16px">
+      শুধুমাত্র অনুমোদিত অ্যাডমিনরা প্রবেশ করতে পারবেন
+    </p>
+  </div>
+</div>
+
+<div id="adminApp">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo">খ</div>
+      <div class="txt">
+        <h2 id="sbSiteName">খবর বাংলা</h2>
+        <p>অ্যাডমিন প্যানেল</p>
+      </div>
+    </div>
+    <nav id="sbNav">
+      <a onclick="showPage('dashboard')" data-page="dashboard" class="on"><span class="ic">📊</span> ড্যাশবোর্ড</a>
+      <a onclick="showPage('posts')" data-page="posts"><span class="ic">📝</span> পোস্ট</a>
+      <a onclick="showPage('categories')" data-page="categories"><span class="ic">🗂️</span> ক্যাটাগরি</a>
+      <a onclick="showPage('ads')" data-page="ads"><span class="ic">📢</span> বিজ্ঞাপন</a>
+      <a onclick="showPage('pages')" data-page="pages"><span class="ic">📄</span> পেজ</a>
+      <div class="divider">যোগাযোগ</div>
+      <a onclick="showPage('messages')" data-page="messages"><span class="ic">✉️</span> মেসেজ</a>
+      <div class="divider">সেটিংস</div>
+      <a onclick="showPage('settings')" data-page="settings"><span class="ic">⚙️</span> সাইট সেটিংস</a>
+    </nav>
+    <div class="user">
+      <div class="av" id="userAv">A</div>
+      <div class="em" id="userEmail">admin@example.com</div>
+      <button onclick="doLogout()" title="লগআউট" style="color:#9CA3AF;font-size:18px">⏻</button>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+      <h1 id="pageTitle">ড্যাশবোর্ড</h1>
+      <div class="actions"><span class="live-dot">Live</span></div>
+    </div>
+    <div class="content" id="content"></div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<!-- ═══ Firebase Compat SDK (ES module নয় — file:// এ কাজ করবে) ═══ -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+<script>
+/* ================================================================
+   ADMIN PANEL — খবর বাংলা (WebView Compatible)
+   ================================================================ */
+
+/* ─── Firebase Config ─── */
+const firebaseConfig = {
+  apiKey: "AIzaSyByj7ivxIa83NfcpZsHuHPQu4hX-KF_1pI",
+  authDomain: "fir-e71c6.firebaseapp.com",
+  databaseURL: "https://fir-e71c6-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "fir-e71c6",
+  storageBucket: "fir-e71c6.firebasestorage.app",
+  messagingSenderId: "121956148050",
+  appId: "1:121956148050:web:7c69c2208289de1946908b"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db   = firebase.database();
+
+/* ─── STATE ─── */
+const A = {
+  user: null,
+  isAdmin: false,
+  page: 'dashboard',
+  data: { posts:{}, categories:{}, pages:{}, ads:{}, messages:{}, settings:{} },
+  editingId: null,
+  editingType: null,
+  unsubs: []
+};
+
+/* ─── HELPERS ─── */
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const esc = s => String(s == null ? '' : s)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+  .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const num = v => { const n = Number(v); return isNaN(n) ? 0 : n; };
+const now = () => Date.now();
+
+function fmtDate(ts){
+  if(!ts) return '—';
+  try {
+    return new Date(ts).toLocaleString('bn-BD', {
+      day:'numeric', month:'short', year:'numeric',
+      hour:'2-digit', minute:'2-digit'
+    });
+  } catch(e){ return new Date(ts).toDateString(); }
+}
+
+function toast(msg, type){
+  const el = document.createElement('div');
+  el.className = 'toast ' + (type || '');
+  el.innerHTML = '<span class="ic">' +
+    (type==='ok'?'✓':type==='err'?'✕':type==='warn'?'⚠':'ℹ') +
+    '</span><span>' + esc(msg) + '</span>';
+  $('#toasts').appendChild(el);
+  setTimeout(()=>{
+    el.style.transition='opacity .25s,transform .25s';
+    el.style.opacity='0'; el.style.transform='translateX(20px)';
+    setTimeout(()=>el.remove(), 260);
+  }, 3200);
+}
+
+function confirmBox(msg){
+  return new Promise(res => {
+    const bg = document.createElement('div');
+    bg.className = 'modal-bg';
+    bg.innerHTML =
+      '<div class="modal">' +
+      '<h3>⚠️ নিশ্চিত করুন</h3>' +
+      '<p style="color:var(--gray);font-size:14.5px">' + esc(msg) + '</p>' +
+      '<div class="actions">' +
+      '<button class="btn btn-ghost" id="cnNo">বাতিল</button>' +
+      '<button class="btn btn-err" id="cnYes">হ্যাঁ, ডিলিট করুন</button>' +
+      '</div></div>';
+    document.body.appendChild(bg);
+    bg.querySelector('#cnNo').onclick = () => { bg.remove(); res(false); };
+    bg.querySelector('#cnYes').onclick = () => { bg.remove(); res(true); };
+  });
+}
+
+/* ─── AUTH ─── */
+window.doLogin = async function(){
+  const email = $('#loginEmail').value.trim();
+  const pass  = $('#loginPass').value;
+  const btn   = $('#loginBtn');
+  if(!email || !pass){ toast('ইমেইল ও পাসওয়ার্ড দিন', 'warn'); return; }
+  btn.disabled = true;
+  btn.textContent = 'লগইন হচ্ছে...';
+  try {
+    await auth.signInWithEmailAndPassword(email, pass);
+    toast('সফলভাবে লগইন হয়েছে ✓', 'ok');
+  } catch(e){
+    console.error(e);
+    let m = e.message || 'লগইন ব্যর্থ';
+    if(e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password')
+      m = 'ভুল ইমেইল বা পাসওয়ার্ড';
+    if(e.code === 'auth/user-not-found') m = 'এই ইমেইলে কোনো অ্যাডমিন নেই';
+    if(e.code === 'auth/too-many-requests') m = 'অনেকবার ভুল হয়েছে, কিছুক্ষণ পরে চেষ্টা করুন';
+    if(e.code === 'auth/network-request-failed') m = 'ইন্টারনেট কানেকশন নেই';
+    toast(m, 'err');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🔐 লগইন করুন';
+  }
+};
+
+window.doLogout = async function(){
+  if(!await confirmBox('লগআউট করতে চান?')) return;
+  await auth.signOut();
+  location.reload();
+};
+
+window.toggleSidebar = function(){
+  $('#sidebar').classList.toggle('open');
+};
+
+auth.onAuthStateChanged(async (user) => {
+  A.user = user || null;
+  if(!user){
+    $('#loginScreen').style.display = 'grid';
+    $('#adminApp').classList.remove('show');
+    return;
+  }
+  try {
+    const snap = await db.ref('admins/' + user.uid).get();
+    const data = snap.val();
+    if(!data || data.active !== true){
+      toast('আপনি অ্যাডমিন নন', 'err');
+      await auth.signOut();
+      return;
+    }
+    A.isAdmin = true;
+    $('#userEmail').textContent = user.email || user.uid;
+    $('#userAv').textContent = (user.email || 'A')[0].toUpperCase();
+    $('#loginScreen').style.display = 'none';
+    $('#adminApp').classList.add('show');
+    startListeners();
+    showPage('dashboard');
+  } catch(e){
+    console.error(e);
+    toast('অ্যাডমিন যাচাই ব্যর্থ', 'err');
+    await auth.signOut();
+  }
+});
+
+/* ─── LISTENERS ─── */
+function startListeners(){
+  A.unsubs.forEach(u => { try{ u(); }catch(e){} });
+  A.unsubs = [];
+
+  const bind = (path, key, pages) => {
+    const cb = s => {
+      A.data[key] = s.val() || {};
+      if(pages.includes(A.page)) renderPage();
+    };
+    const r = db.ref(path);
+    r.on('value', cb);
+    A.unsubs.push(() => r.off('value', cb));
+  };
+
+  bind('posts',      'posts',      ['posts','dashboard']);
+  bind('categories', 'categories', ['categories','posts']);
+  bind('pages',      'pages',      ['pages']);
+  bind('ads',        'ads',        ['ads','dashboard']);
+  bind('messages',   'messages',   ['messages','dashboard']);
+
+  const scb = s => {
+    A.data.settings = s.val() || {};
+    if(A.page === 'settings') renderPage();
+    if(A.data.settings.siteName) $('#sbSiteName').textContent = A.data.settings.siteName;
+  };
+  const sref = db.ref('settings/site');
+  sref.on('value', scb);
+  A.unsubs.push(() => sref.off('value', scb));
+}
+
+/* ─── ROUTER ─── */
+window.showPage = function(page){
+  A.page = page;
+  $$('#sbNav a').forEach(a => a.classList.toggle('on', a.dataset.page === page));
+  const titles = {
+    dashboard:'ড্যাশবোর্ড', posts:'পোস্ট ম্যানেজমেন্ট',
+    categories:'ক্যাটাগরি ম্যানেজমেন্ট', ads:'বিজ্ঞাপন ম্যানেজমেন্ট',
+    pages:'পেজ ম্যানেজমেন্ট', messages:'মেসেজ',
+    settings:'সাইট সেটিংস'
+  };
+  $('#pageTitle').textContent = titles[page] || page;
+  $('#sidebar').classList.remove('open');
+  renderPage();
+};
+
+function renderPage(){
+  const c = $('#content');
+  if(A.page === 'dashboard')  c.innerHTML = viewDashboard();
+  if(A.page === 'posts')      c.innerHTML = viewPosts();
+  if(A.page === 'categories') c.innerHTML = viewCategories();
+  if(A.page === 'ads')        c.innerHTML = viewAds();
+  if(A.page === 'pages')      c.innerHTML = viewPages();
+  if(A.page === 'messages')   c.innerHTML = viewMessages();
+  if(A.page === 'settings')   c.innerHTML = viewSettings();
+}
+
+/* ─── DASHBOARD ─── */
+function viewDashboard(){
+  const posts = Object.values(A.data.posts);
+  const cats  = Object.values(A.data.categories);
+  const ads   = Object.values(A.data.ads);
+  const msgs  = Object.values(A.data.messages);
+  const unread = msgs.filter(m => m.status === 'unread').length;
+  const recent = posts.sort((a,b) => num(b.createdAt) - num(a.createdAt)).slice(0, 5);
+
+  return '<div class="stats">' +
+    '<div class="stat"><div class="ic b1">📝</div><div><div class="num">' + posts.length + '</div><div class="lbl">মোট পোস্ট</div></div></div>' +
+    '<div class="stat"><div class="ic b2">🗂️</div><div><div class="num">' + cats.length + '</div><div class="lbl">ক্যাটাগরি</div></div></div>' +
+    '<div class="stat"><div class="ic b3">📢</div><div><div class="num">' + ads.length + '</div><div class="lbl">বিজ্ঞাপন</div></div></div>' +
+    '<div class="stat"><div class="ic b4">✉️</div><div><div class="num">' + unread + '</div><div class="lbl">অপঠিত মেসেজ</div></div></div>' +
+    '</div>' +
+    '<div class="card"><h3>সাম্প্রতিক পোস্ট</h3>' +
+    (recent.length
+      ? '<div class="table-wrap"><table><thead><tr><th>টাইটেল</th><th>স্ট্যাটাস</th><th>তারিখ</th></tr></thead><tbody>' +
+        recent.map(p =>
+          '<tr><td>' + esc(p.title || '(শিরোনাম নেই)') + '</td>' +
+          '<td>' + statusBadge(p.status) + '</td>' +
+          '<td>' + fmtDate(p.createdAt) + '</td></tr>'
+        ).join('') +
+        '</tbody></table></div>'
+      : '<p class="muted">এখনো কোনো পোস্ট নেই</p>') +
+    '</div>' +
+    '<div class="card"><h3>দ্রুত লিংক</h3>' +
+    '<div style="display:flex;gap:10px;flex-wrap:wrap">' +
+    '<button class="btn btn-pri btn-sm" onclick="newPost()">📝 নতুন পোস্ট</button>' +
+    '<button class="btn btn-ghost btn-sm" onclick="newCategory()">🗂️ নতুন ক্যাটাগরি</button>' +
+    '<button class="btn btn-ghost btn-sm" onclick="newAd()">📢 নতুন বিজ্ঞাপন</button>' +
+    '</div></div>';
+}
+
+function statusBadge(s){
+  if(s === 'draft') return '<span class="badge warn">ড্রাফট</span>';
+  if(s === 'published' || !s) return '<span class="badge ok">প্রকাশিত</span>';
+  return '<span class="badge gray">' + esc(s) + '</span>';
+}
+
+/* ─── POSTS ─── */
+function viewPosts(){
+  const list = Object.entries(A.data.posts)
+    .map(([id, p]) => ({ id, ...p }))
+    .sort((a,b) => num(b.createdAt) - num(a.createdAt));
+
+  return '<div class="card">' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">' +
+    '<h3 style="margin:0">সব পোস্ট (' + list.length + ')</h3>' +
+    '<button class="btn btn-pri btn-sm" onclick="newPost()">+ নতুন পোস্ট</button>' +
+    '</div>' +
+    (list.length
+      ? '<div class="table-wrap"><table><thead><tr>' +
+        '<th>ছবি</th><th>শিরোনাম</th><th>ক্যাটাগরি</th><th>স্ট্যাটাস</th><th>তারিখ</th><th>অ্যাকশন</th>' +
+        '</tr></thead><tbody>' +
+        list.map(p => {
+          const cat = A.data.categories[p.categoryId];
+          return '<tr>' +
+            '<td>' + (p.image ? '<img class="thumb" src="' + esc(p.image) + '" onerror="this.style.display=\'none\'">' : '—') + '</td>' +
+            '<td><b>' + esc(p.title || '(শিরোনাম নেই)') + '</b>' +
+            (p.featured ? ' <span class="badge info">ফিচার্ড</span>' : '') +
+            (p.breaking ? ' <span class="badge err">ব্রেকিং</span>' : '') + '</td>' +
+            '<td>' + (cat ? esc(cat.name) : '—') + '</td>' +
+            '<td>' + statusBadge(p.status) + '</td>' +
+            '<td>' + fmtDate(p.createdAt) + '</td>' +
+            '<td><div class="row-actions">' +
+            '<button class="edit" onclick="editPost(\'' + p.id + '\')">✎ এডিট</button>' +
+            '<button class="del" onclick="deletePost(\'' + p.id + '\')">🗑 ডিলিট</button>' +
+            '</div></td></tr>';
+        }).join('') +
+        '</tbody></table></div>'
+      : '<p class="muted">এখনো কোনো পোস্ট নেই। "নতুন পোস্ট" বাটনে ক্লিক করুন।</p>') +
+    '</div>';
+}
+
+window.newPost = function(){
+  A.editingId = null;
+  A.editingType = 'post';
+  renderPostForm({});
+};
+window.editPost = function(id){
+  A.editingId = id;
+  A.editingType = 'post';
+  renderPostForm(A.data.posts[id] || {});
+};
+
+function renderPostForm(p){
+  const isEdit = !!A.editingId;
+  const cats = Object.entries(A.data.categories).map(([id, c]) => ({id, ...c}));
+
+  $('#pageTitle').textContent = isEdit ? 'পোস্ট এডিট' : 'নতুন পোস্ট';
+
+  $('#content').innerHTML =
+    '<div class="card">' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">' +
+    '<h3 style="margin:0">' + (isEdit ? 'পোস্ট এডিট করুন' : 'নতুন পোস্ট তৈরি করুন') + '</h3>' +
+    '<button class="btn btn-ghost btn-sm" onclick="showPage(\'posts\')">← ফিরে যান</button>' +
+    '</div>' +
+
+    '<div class="row row-2">' +
+    '<div class="form-group"><label>শিরোনাম *</label>' +
+    '<input id="pfTitle" value="' + esc(p.title||'') + '" placeholder="পোস্টের শিরোনাম"></div>' +
+    '<div class="form-group"><label>সাবটাইটেল</label>' +
+    '<input id="pfSubtitle" value="' + esc(p.subtitle||'') + '" placeholder="ঐচ্ছিক"></div>' +
+    '</div>' +
+
+    '<div class="row row-2">' +
+    '<div class="form-group"><label>ক্যাটাগরি</label>' +
+    '<select id="pfCat"><option value="">— নির্বাচন করুন —</option>' +
+    cats.map(c => '<option value="' + c.id + '"' + (p.categoryId===c.id?' selected':'') + '>' + esc(c.name) + '</option>').join('') +
+    '</select></div>' +
+    '<div class="form-group"><label>লেখক</label>' +
+    '<input id="pfAuthor" value="' + esc(p.author||'') + '" placeholder="লেখকের নাম"></div>' +
+    '</div>' +
+
+    '<div class="form-group"><label>এক্সার্প্ট (সংক্ষিপ্ত)</label>' +
+    '<textarea id="pfExcerpt" style="min-height:80px">' + esc(p.excerpt||'') + '</textarea></div>' +
+
+    '<div class="form-group"><label>ফিচার্ড ইমেজ URL</label>' +
+    '<input id="pfImage" value="' + esc(p.image||'') + '" placeholder="https://..."></div>' +
+
+    '<div class="form-group"><label>বিষয়বস্তু (HTML সাপোর্টেড)</label>' +
+    '<div class="editor"><div class="toolbar">' +
+    '<button type="button" onclick="insertTag(\'h2\')">H2</button>' +
+    '<button type="button" onclick="insertTag(\'h3\')">H3</button>' +
+    '<button type="button" class="fmt" onclick="insertTag(\'b\')">B</button>' +
+    '<button type="button" class="fmt" onclick="insertTag(\'i\')">I</button>' +
+    '<button type="button" onclick="insertTag(\'p\')">¶</button>' +
+    '<button type="button" onclick="insertTag(\'a\')">🔗</button>' +
+    '<button type="button" onclick="insertTag(\'blockquote\')">❝</button>' +
+    '<button type="button" onclick="insertTag(\'ul\')">•</button>' +
+    '<button type="button" onclick="insertTag(\'img\')">🖼</button>' +
+    '<button type="button" onclick="insertTag(\'pre\')">⌨</button>' +
+    '</div>' +
+    '<textarea id="pfBody" placeholder="&lt;p&gt;এখানে লিখুন...&lt;/p&gt;">' + esc(p.body||'') + '</textarea>' +
+    '</div></div>' +
+
+    '<div class="form-group"><label>ট্যাগ (কমা দিয়ে আলাদা করুন)</label>' +
+    '<input id="pfTags" value="' + esc(Array.isArray(p.tags)?p.tags.join(', '):(p.tags||'')) + '" placeholder="বাংলাদেশ, খেলাধুলা, প্রযুক্তি"></div>' +
+
+    '<div class="form-group"><label>ভিডিও URL (YouTube/Vimeo/MP4)</label>' +
+    '<input id="pfVideo" value="' + esc(p.video||'') + '" placeholder="https://youtube.com/watch?v=..."></div>' +
+
+    '<div class="row row-2">' +
+    '<div class="form-group"><label>SEO Title</label>' +
+    '<input id="pfSeoTitle" value="' + esc(p.seoTitle||'') + '"></div>' +
+    '<div class="form-group"><label>SEO Description</label>' +
+    '<input id="pfSeoDesc" value="' + esc(p.seoDescription||'') + '"></div>' +
+    '</div>' +
+
+    '<div class="row row-3">' +
+    '<label class="checkbox-wrap"><input type="checkbox" id="pfFeatured"' + (p.featured?' checked':'') + '> ফিচার্ড পোস্ট</label>' +
+    '<label class="checkbox-wrap"><input type="checkbox" id="pfBreaking"' + (p.breaking?' checked':'') + '> ব্রেকিং নিউজ</label>' +
+    '<label class="checkbox-wrap"><input type="checkbox" id="pfDraft"' + (p.status==='draft'?' checked':'') + '> ড্রাফট হিসেবে সেভ</label>' +
+    '</div>' +
+
+    '<div style="display:flex;gap:10px;margin-top:24px">' +
+    '<button class="btn btn-pri" onclick="savePost()" id="pfSave">💾 সেভ করুন</button>' +
+    '<button class="btn btn-ghost" onclick="showPage(\'posts\')">বাতিল</button>' +
+    (isEdit ? '<button class="btn btn-err" style="margin-left:auto" onclick="deletePost(\'' + A.editingId + '\')">🗑 ডিলিট</button>' : '') +
+    '</div></div>';
+}
+
+window.insertTag = function(tag){
+  const ta = $('#pfBody');
+  if(!ta) return;
+  const start = ta.selectionStart, end = ta.selectionEnd;
+  const sel = ta.value.substring(start, end);
+  let out = '';
+  if(tag === 'a') out = '<a href="URL">' + (sel || 'লিংক টেক্সট') + '</a>';
+  else if(tag === 'img') out = '<img src="IMAGE_URL" alt="">';
+  else if(tag === 'ul') out = '<ul>\n  <li>' + (sel || 'আইটেম') + '</li>\n</ul>';
+  else if(tag === 'blockquote') out = '<blockquote>' + (sel || 'উক্তি') + '</blockquote>';
+  else out = '<' + tag + '>' + sel + '</' + tag + '>';
+  ta.setRangeText(out, start, end, 'end');
+  ta.focus();
+};
+
+window.savePost = async function(){
+  const title = $('#pfTitle').value.trim();
+  if(!title){ toast('শিরোনাম দিন', 'warn'); return; }
+
+  const tagsRaw = $('#pfTags').value.trim();
+  const tags = tagsRaw ? tagsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+  const data = {
+    title,
+    subtitle: $('#pfSubtitle').value.trim(),
+    categoryId: $('#pfCat').value || '',
+    author: $('#pfAuthor').value.trim(),
+    excerpt: $('#pfExcerpt').value.trim(),
+    image: $('#pfImage').value.trim(),
+    body: $('#pfBody').value,
+    tags,
+    video: $('#pfVideo').value.trim(),
+    seoTitle: $('#pfSeoTitle').value.trim(),
+    seoDescription: $('#pfSeoDesc').value.trim(),
+    featured: $('#pfFeatured').checked,
+    breaking: $('#pfBreaking').checked,
+    status: $('#pfDraft').checked ? 'draft' : 'published',
+    updatedAt: now()
+  };
+
+  const btn = $('#pfSave');
+  btn.disabled = true; btn.textContent = 'সেভ হচ্ছে...';
+
+  try {
+    if(A.editingId){
+      await db.ref('posts/' + A.editingId).update(data);
+      toast('আপডেট হয়েছে ✓', 'ok');
+    } else {
+      data.createdAt = now();
+      data.publishedAt = data.status === 'published' ? now() : 0;
+      data.views = 0;
+      await db.ref('posts').push(data);
+      toast('পোস্ট তৈরি হয়েছে ✓', 'ok');
+    }
+    A.editingId = null;
+    showPage('posts');
+  } catch(e){
+    console.error(e);
+    toast('সেভ ব্যর্থ: ' + (e.message||e), 'err');
+  } finally {
+    btn.disabled = false; btn.textContent = '💾 সেভ করুন';
+  }
+};
+
+window.deletePost = async function(id){
+  if(!await confirmBox('এই পোস্টটি স্থায়ীভাবে ডিলিট করতে চান?')) return;
+  try {
+    await db.ref('posts/' + id).remove();
+    toast('ডিলিট হয়েছে ✓', 'ok');
+    if(A.editingId === id) showPage('posts');
+  } catch(e){ toast('ডিলিট ব্যর্থ', 'err'); }
+};
+
+/* ─── CATEGORIES ─── */
+function viewCategories(){
+  const list = Object.entries(A.data.categories)
+    .map(([id, c]) => ({ id, ...c }))
+    .sort((a,b) => num(a.order) - num(b.order));
+
+  return '<div class="card">' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">' +
+    '<h3 style="margin:0">ক্যাটাগরি (' + list.length + ')</h3>' +
+    '<button class="btn btn-pri btn-sm" onclick="newCategory()">+ নতুন ক্যাটাগরি</button>' +
+    '</div>' +
+    (list.length
+      ? '<div class="table-wrap"><table><thead><tr>' +
+        '<th>আইকন</th><th>নাম</th><th>Slug</th><th>ক্রম</th><th>স্ট্যাটাস</th><th>অ্যাকশন</th>' +
+        '</tr></thead><tbody>' +
+        list.map(c =>
+          '<tr><td style="font-size:22px">' + esc(c.icon || '📁') + '</td>' +
+          '<td><b>' + esc(c.name||'') + '</b></td>' +
+          '<td><code>' + esc(c.slug||c.id) + '</code></td>' +
+          '<td>' + num(c.order) + '</td>' +
+          '<td>' + (c.status === 'draft' ? '<span class="badge warn">ড্রাফট</span>' : '<span class="badge ok">সক্রিয়</span>') + '</td>' +
+          '<td><div class="row-actions">' +
+          '<button class="edit" onclick="editCategory(\'' + c.id + '\')">✎</button>' +
+          '<button class="del" onclick="deleteCategory(\'' + c.id + '\')">🗑</button>' +
+          '</div></td></tr>'
+        ).join('') +
+        '</tbody></table></div>'
+      : '<p class="muted">এখনো কোনো ক্যাটাগরি নেই</p>') +
+    '</div>';
+}
+
+window.newCategory = function(){
+  A.editingId = null; A.editingType = 'category';
+  renderCategoryForm({});
+};
+window.editCategory = function(id){
+  A.editingId = id; A.editingType = 'category';
+  renderCategoryForm(A.data.categories[id] || {});
+};
+
+function renderCategoryForm(c){
+  const isEdit = !!A.editingId;
+  $('#pageTitle').textContent = isEdit ? 'ক্যাটাগরি এডিট' : 'নতুন ক্যাটাগরি';
+
+  $('#content').innerHTML =
+    '<div class="card">' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">' +
+    '<h3 style="margin:0">' + (isEdit ? 'ক্যাটাগরি এডিট' : 'নতুন ক্যাটাগরি') + '</h3>' +
+    '<button class="btn btn-ghost btn-sm" onclick="showPage(\'categories\')">← ফিরে যান</button>' +
+    '</div>' +
+
+    '<div class="row row-2">' +
+    '<div class="form-group"><label>নাম *</label>' +
+    '<input id="cfName" value="' + esc(c.name||'') + '" placeholder="যেমন: খেলাধুলা"></div>' +
+    '<div class="form-group"><label>Slug (URL এর জন্য)</label>' +
+    '<input id="cfSlug" value="' + esc(c.slug||'') + '" placeholder="kheladhula"></div>' +
+    '</div>' +
+
+    '<div class="row row-3">' +
+    '<div class="form-group"><label>আইকন (ইমোজি)</label>' +
+    '<input id="cfIcon" value="' + esc(c.icon||'📁') + '" placeholder="⚽"></div>' +
+    '<div class="form-group"><label>ক্রম</label>' +
+    '<input id="cfOrder" type="number" value="' + num(c.order) + '"></div>' +
+    '<div class="form-group"><label>স্ট্যাটাস</label>' +
+    '<select id="cfStatus"><option value="">সক্রিয়</option>' +
+    '<option value="draft"' + (c.status==='draft'?' selected':'') + '>ড্রাফট</option>' +
+    '</select></div>' +
+    '</div>' +
+
+    '<div class="form-group"><label>বর্ণনা</label>' +
+    '<textarea id="cfDesc">' + esc(c.description||'') + '</textarea></div>' +
+
+    '<div class="form-group"><label>ইমেজ URL (ঐচ্ছিক)</label>' +
+    '<input id="cfImage" value="' + esc(c.image||'') + '"></div>' +
+
+    '<div style="display:flex;gap:10px;margin-top:24px">' +
+    '<button class="btn btn-pri" onclick="saveCategory()">💾 সেভ করুন</button>' +
+    '<button class="btn btn-ghost" onclick="showPage(\'categories\')">বাতিল</button>' +
+    '</div></div>';
+}
+
+window.saveCategory = async function(){
+  const name = $('#cfName').value.trim();
+  if(!name){ toast('নাম দিন', 'warn'); return; }
+
+  const data = {
+    name,
+    slug: $('#cfSlug').value.trim() || name.toLowerCase().replace(/\s+/g,'-'),
+    icon: $('#cfIcon').value.trim() || '📁',
+    order: num($('#cfOrder').value),
+    status: $('#cfStatus').value || '',
+    description: $('#cfDesc').value.trim(),
+    image: $('#cfImage').value.trim(),
+    updatedAt: now()
+  };
+
+  try {
+    if(A.editingId){
+      await db.ref('categories/' + A.editingId).update(data);
+      toast('আপডেট হয়েছে ✓', 'ok');
+    } else {
+      data.createdAt = now();
+      await db.ref('categories').push(data);
+      toast('ক্যাটাগরি তৈরি হয়েছে ✓', 'ok');
+    }
+    A.editingId = null;
+    showPage('categories');
+  } catch(e){ toast('সেভ ব্যর্থ', 'err'); }
+};
+
+window.deleteCategory = async function(id){
+  if(!await confirmBox('এই ক্যাটাগরি ডিলিট করতে চান?')) return;
+  try {
+    await db.ref('categories/' + id).remove();
+    toast('ডিলিট হয়েছে ✓', 'ok');
+  } catch(e){ toast('ডিলিট ব্যর্থ', 'err'); }
+};
+
+/* ─── ADS ─── */
+const AD_POSITIONS = [
+  { key:'header-top',     label:'হেডারের নিচে, ব্রেকিং টিকারের উপরে' },
+  { key:'home-1',         label:'হোমপেজ — ফিচার্ড স্লাইডারের নিচে' },
+  { key:'home-2',         label:'হোমপেজ — সর্বশেষ পোস্টের নিচে' },
+  { key:'home-3',         label:'হোমপেজ — ক্যাটাগরি সেকশনের নিচে' },
+  { key:'home-bottom',    label:'হোমপেজ — ফুটারের উপরে' },
+  { key:'sidebar-1',      label:'সাইডবার — জনপ্রিয় পোস্টের নিচে' },
+  { key:'sidebar-2',      label:'সাইডবার — ট্রেন্ডিং পোস্টের নিচে' },
+  { key:'sidebar-sticky', label:'সাইডবার — ক্যাটাগরি লিস্টের নিচে' },
+  { key:'post-top',       label:'পোস্ট পেজ — টাইটেলের নিচে' },
+  { key:'post-bottom',    label:'পোস্ট পেজ — কনটেন্টের নিচে' },
+  { key:'category-top',   label:'ক্যাটাগরি পেজ — উপরে' },
+  { key:'search-top',     label:'সার্চ পেজ — উপরে' }
+];
+
+function viewAds(){
+  const list = Object.entries(A.data.ads)
+    .map(([id, a]) => ({ id, ...a }))
+    .sort((a,b) => num(a.order) - num(b.order));
+
+  return '<div class="pos-guide"><h4>📍 Position Guide — কোথায় অ্যাড দেখাবে</h4>' +
+    '<div class="table-wrap" style="background:transparent"><table>' +
+    '<thead><tr><th>Key</th><th>অবস্থান</th></tr></thead><tbody>' +
+    AD_POSITIONS.map(p => '<tr><td><code>' + p.key + '</code></td><td>' + esc(p.label) + '</td></tr>').join('') +
+    '</tbody></table></div></div>' +
+
+    '<div class="card">' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">' +
+    '<h3 style="margin:0">বিজ্ঞাপন (' + list.length + ')</h3>' +
+    '<button class="btn btn-pri btn-sm" onclick="newAd()">+ নতুন বিজ্ঞাপন</button>' +
+    '</div>' +
+    (list.length
+      ? '<div class="table-wrap"><table><thead><tr>' +
+        '<th>ছবি</th><th>টাইটেল</th><th>Position</th><th>Active</th><th>ক্রম</th><th>অ্যাকশন</th>' +
+        '</tr></thead><tbody>' +
+        list.map(a => {
+          const pos = AD_POSITIONS.find(p => p.key === a.position);
+          return '<tr>' +
+            '<td>' + (a.image ? '<img class="thumb" src="' + esc(a.image) + '" onerror="this.style.display=\'none\'">' : '—') + '</td>' +
+            '<td><b>' + esc(a.title||'(শিরোনাম নেই)') + '</b></td>' +
+            '<td><code>' + esc(a.position||'home-2') + '</code><br><span class="small muted">' + esc(pos?pos.label:'') + '</span></td>' +
+            '<td>' + (a.active===false?'<span class="badge err">বন্ধ</span>':'<span class="badge ok">চালু</span>') + '</td>' +
+            '<td>' + num(a.order) + '</td>' +
+            '<td><div class="row-actions">' +
+            '<button class="edit" onclick="editAd(\'' + a.id + '\')">✎</button>' +
+            '<button class="del" onclick="deleteAd(\'' + a.id + '\')">🗑</button>' +
+            '</div></td></tr>';
+        }).join('') +
+        '</tbody></table></div>'
+      : '<p class="muted">এখনো কোনো বিজ্ঞাপন নেই</p>') +
+    '</div>';
+}
+
+window.newAd = function(){
+  A.editingId = null; A.editingType = 'ad';
+  renderAdForm({});
+};
+window.editAd = function(id){
+  A.editingId = id; A.editingType = 'ad';
+  renderAdForm(A.data.ads[id] || {});
+};
+
+function renderAdForm(a){
+  const isEdit = !!A.editingId;
+  $('#pageTitle').textContent = isEdit ? 'বিজ্ঞাপন এডিট' : 'নতুন বিজ্ঞাপন';
+
+  $('#content').innerHTML =
+    '<div class="card">' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">' +
+    '<h3 style="margin:0">' + (isEdit ? 'বিজ্ঞাপন এডিট' : 'নতুন বিজ্ঞাপন') + '</h3>' +
+    '<button class="btn btn-ghost btn-sm" onclick="showPage(\'ads\')">← ফিরে যান</button>' +
+    '</div>' +
+
+    '<div class="row row-2">' +
+    '<div class="form-group"><label>টাইটেল *</label>' +
+    '<input id="afTitle" value="' + esc(a.title||'') + '" placeholder="বিজ্ঞাপনের নাম"></div>' +
+    '<div class="form-group"><label>Position *</label>' +
+    '<select id="afPosition">' +
+    AD_POSITIONS.map(p => '<option value="' + p.key + '"' + ((a.position||'home-2')===p.key?' selected':'') + '>' + p.key + ' — ' + esc(p.label) + '</option>').join('') +
+    '</select></div>' +
+    '</div>' +
+
+    '<div class="form-group"><label>ইমেজ URL *</label>' +
+    '<input id="afImage" value="' + esc(a.image||'') + '" placeholder="https://..."></div>' +
+
+    '<div class="form-group"><label>ক্লিক URL</label>' +
+    '<input id="afUrl" value="' + esc(a.url||'') + '" placeholder="https://... (ঐচ্ছিক)"></div>' +
+
+    '<div class="row row-3">' +
+    '<div class="form-group"><label>ক্রম</label>' +
+    '<input id="afOrder" type="number" value="' + num(a.order) + '"></div>' +
+    '<div class="form-group"><label>শুরুর তারিখ</label>' +
+    '<input id="afStart" type="date" value="' + (a.startDate ? new Date(a.startDate).toISOString().split('T')[0] : '') + '"></div>' +
+    '<div class="form-group"><label>শেষ তারিখ</label>' +
+    '<input id="afEnd" type="date" value="' + (a.endDate ? new Date(a.endDate).toISOString().split('T')[0] : '') + '"></div>' +
+    '</div>' +
+
+    '<label class="checkbox-wrap"><input type="checkbox" id="afActive"' + (a.active !== false ? ' checked':'') + '> চালু (active)</label>' +
+
+    '<div style="display:flex;gap:10px;margin-top:24px">' +
+    '<button class="btn btn-pri" onclick="saveAd()">💾 সেভ করুন</button>' +
+    '<button class="btn btn-ghost" onclick="showPage(\'ads\')">বাতিল</button>' +
+    '</div></div>';
+}
+
+window.saveAd = async function(){
+  const title = $('#afTitle').value.trim();
+  const image = $('#afImage').value.trim();
+  if(!title){ toast('টাইটেল দিন', 'warn'); return; }
+  if(!image){ toast('ইমেজ URL দিন', 'warn'); return; }
+
+  const startVal = $('#afStart').value;
+  const endVal   = $('#afEnd').value;
+
+  const data = {
+    title,
+    image,
+    url: $('#afUrl').value.trim(),
+    position: $('#afPosition').value || 'home-2',
+    order: num($('#afOrder').value),
+    active: $('#afActive').checked,
+    startDate: startVal ? new Date(startVal).getTime() : 0,
+    endDate:   endVal   ? new Date(endVal).getTime()   : 0,
+    updatedAt: now()
+  };
+
+  try {
+    if(A.editingId){
+      await db.ref('ads/' + A.editingId).update(data);
+      toast('আপডেট হয়েছে ✓', 'ok');
+    } else {
+      data.createdAt = now();
+      await db.ref('ads').push(data);
+      toast('বিজ্ঞাপন তৈরি হয়েছে ✓', 'ok');
+    }
+    A.editingId = null;
+    showPage('ads');
+  } catch(e){ toast('সেভ ব্যর্থ: ' + (e.message||e), 'err'); }
+};
+
+window.deleteAd = async function(id){
+  if(!await confirmBox('এই বিজ্ঞাপনটি ডিলিট করতে চান?')) return;
+  try {
+    await db.ref('ads/' + id).remove();
+    toast('ডিলিট হয়েছে ✓', 'ok');
+  } catch(e){ toast('ডিলিট ব্যর্থ', 'err'); }
+};
+
+/* ─── PAGES ─── */
+function viewPages(){
+  const list = Object.entries(A.data.pages).map(([slug, p]) => ({ slug, ...p }));
+
+  return '<div class="card">' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">' +
+    '<h3 style="margin:0">পেজ (' + list.length + ')</h3>' +
+    '<button class="btn btn-pri btn-sm" onclick="newPage()">+ নতুন পেজ</button>' +
+    '</div>' +
+    (list.length
+      ? '<div class="table-wrap"><table><thead><tr>' +
+        '<th>Slug</th><th>শিরোনাম</th><th>স্ট্যাটাস</th><th>মেনু</th><th>অ্যাকশন</th>' +
+        '</tr></thead><tbody>' +
+        list.map(p =>
+          '<tr><td><code>' + esc(p.slug) + '</code></td>' +
+          '<td><b>' + esc(p.title||'') + '</b></td>' +
+          '<td>' + (p.status==='draft'?'<span class="badge warn">ড্রাফট</span>':'<span class="badge ok">সক্রিয়</span>') + '</td>' +
+          '<td>' + (p.showInMenu!==false?'✓':'—') + '</td>' +
+          '<td><div class="row-actions">' +
+          '<button class="edit" onclick="editPage(\'' + p.slug + '\')">✎</button>' +
+          '<button class="del" onclick="deletePage(\'' + p.slug + '\')">🗑</button>' +
+          '</div></td></tr>'
+        ).join('') +
+        '</tbody></table></div>'
+      : '<p class="muted">এখনো কোনো পেজ নেই</p>') +
+    '</div>';
+}
+
+window.newPage = function(){
+  A.editingId = null; A.editingType = 'page';
+  renderPageForm({});
+};
+window.editPage = function(slug){
+  A.editingId = slug; A.editingType = 'page';
+  renderPageForm(A.data.pages[slug] || {});
+};
+
+function renderPageForm(p){
+  const isEdit = !!A.editingId;
+  $('#pageTitle').textContent = isEdit ? 'পেজ এডিট' : 'নতুন পেজ';
+
+  $('#content').innerHTML =
+    '<div class="card">' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">' +
+    '<h3 style="margin:0">' + (isEdit ? 'পেজ এডিট' : 'নতুন পেজ') + '</h3>' +
+    '<button class="btn btn-ghost btn-sm" onclick="showPage(\'pages\')">← ফিরে যান</button>' +
+    '</div>' +
+
+    '<div class="row row-2">' +
+    '<div class="form-group"><label>Slug * (URL এ ব্যবহার হবে)</label>' +
+    '<input id="pgSlug" value="' + esc(p.slug||A.editingId||'') + '"' + (isEdit?' disabled':'') + ' placeholder="about"></div>' +
+    '<div class="form-group"><label>শিরোনাম *</label>' +
+    '<input id="pgTitle" value="' + esc(p.title||'') + '" placeholder="আমাদের সম্পর্কে"></div>' +
+    '</div>' +
+
+    '<div class="form-group"><label>বিষয়বস্তু (HTML সাপোর্টেড)</label>' +
+    '<textarea id="pgBody" style="min-height:300px;font-family:monospace">' + esc(p.body||'') + '</textarea></div>' +
+
+    '<label class="checkbox-wrap"><input type="checkbox" id="pgMenu"' + (p.showInMenu !== false ? ' checked':'') + '> মেনুতে দেখান</label>' +
+    '<label class="checkbox-wrap"><input type="checkbox" id="pgDraft"' + (p.status==='draft'?' checked':'') + '> ড্রাফট</label>' +
+
+    '<div style="display:flex;gap:10px;margin-top:24px">' +
+    '<button class="btn btn-pri" onclick="savePage()">💾 সেভ করুন</button>' +
+    '<button class="btn btn-ghost" onclick="showPage(\'pages\')">বাতিল</button>' +
+    '</div></div>';
+}
+
+window.savePage = async function(){
+  const slug  = ($('#pgSlug').value || A.editingId || '').trim().toLowerCase().replace(/\s+/g,'-');
+  const title = $('#pgTitle').value.trim();
+  if(!slug){ toast('Slug দিন', 'warn'); return; }
+  if(!title){ toast('শিরোনাম দিন', 'warn'); return; }
+
+  const data = {
+    title,
+    body: $('#pgBody').value,
+    showInMenu: $('#pgMenu').checked,
+    status: $('#pgDraft').checked ? 'draft' : '',
+    updatedAt: now()
+  };
+
+  try {
+    await db.ref('pages/' + slug).update(data);
+    toast('সেভ হয়েছে ✓', 'ok');
+    A.editingId = null;
+    showPage('pages');
+  } catch(e){ toast('সেভ ব্যর্থ', 'err'); }
+};
+
+window.deletePage = async function(slug){
+  if(!await confirmBox('"' + slug + '" পেজটি ডিলিট করবেন?')) return;
+  try {
+    await db.ref('pages/' + slug).remove();
+    toast('ডিলিট হয়েছে ✓', 'ok');
+  } catch(e){ toast('ডিলিট ব্যর্থ', 'err'); }
+};
+
+/* ─── MESSAGES ─── */
+function viewMessages(){
+  const list = Object.entries(A.data.messages)
+    .map(([id, m]) => ({ id, ...m }))
+    .sort((a,b) => num(b.createdAt) - num(a.createdAt));
+
+  return '<div class="card">' +
+    '<h3>মেসেজ (' + list.length + ')</h3>' +
+    (list.length
+      ? list.map(m =>
+          '<div style="background:var(--soft);border-radius:10px;padding:14px;margin-bottom:12px;border-left:4px solid ' +
+          (m.status==='unread'?'var(--pri)':'var(--line)') + '">' +
+          '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap">' +
+          '<div><b>' + esc(m.name||'') + '</b> ' +
+          '<span class="muted small">— ' + esc(m.email||'') + '</span>' +
+          (m.status==='unread'?'<span class="badge err">নতুন</span>':'') +
+          '</div><span class="small muted">' + fmtDate(m.createdAt) + '</span></div>' +
+          '<div style="margin-top:8px;font-weight:700;font-size:14.5px">' + esc(m.subject||'') + '</div>' +
+          '<div style="margin-top:6px;color:var(--ink-2);font-size:14px;white-space:pre-wrap">' + esc(m.message||'') + '</div>' +
+          '<div style="display:flex;gap:8px;margin-top:12px">' +
+          (m.status==='unread'?'<button class="btn btn-ghost btn-sm" onclick="markRead(\'' + m.id + '\')">✓ পড়া হয়েছে</button>':'') +
+          '<button class="btn btn-err btn-sm" onclick="deleteMessage(\'' + m.id + '\')">🗑 ডিলিট</button>' +
+          '</div></div>'
+        ).join('')
+      : '<p class="muted">এখনো কোনো মেসেজ নেই</p>') +
+    '</div>';
+}
+
+window.markRead = async function(id){
+  try { await db.ref('messages/' + id).update({ status: 'read' }); toast('OK', 'ok'); }
+  catch(e){ toast('ব্যর্থ', 'err'); }
+};
+window.deleteMessage = async function(id){
+  if(!await confirmBox('মেসেজ ডিলিট করবেন?')) return;
+  try { await db.ref('messages/' + id).remove(); toast('ডিলিট হয়েছে', 'ok'); }
+  catch(e){ toast('ব্যর্থ', 'err'); }
+};
+
+/* ─── SETTINGS ─── */
+function viewSettings(){
+  const s = A.data.settings || {};
+
+  return '<div class="card">' +
+    '<h3>সাইট সেটিংস</h3>' +
+    '<div class="row row-2">' +
+    '<div class="form-group"><label>সাইটের নাম</label>' +
+    '<input id="stName" value="' + esc(s.siteName||'খবর বাংলা') + '"></div>' +
+    '<div class="form-group"><label>ট্যাগলাইন</label>' +
+    '<input id="stTagline" value="' + esc(s.tagline||'সর্বশেষ খবর ও বিশ্লেষণ') + '"></div>' +
+    '</div>' +
+
+    '<div class="form-group"><label>লোগো URL</label>' +
+    '<input id="stLogo" value="' + esc(s.logo||'') + '" placeholder="https://..."></div>' +
+
+    '<div class="form-group"><label>বর্ণনা</label>' +
+    '<textarea id="stDesc">' + esc(s.description||'') + '</textarea></div>' +
+
+    '<div class="row row-3">' +
+    '<div class="form-group"><label>ইমেইল</label><input id="stEmail" value="' + esc(s.email||'') + '"></div>' +
+    '<div class="form-group"><label>ফোন</label><input id="stPhone" value="' + esc(s.phone||'') + '"></div>' +
+    '<div class="form-group"><label>ঠিকানা</label><input id="stAddr" value="' + esc(s.address||'') + '"></div>' +
+    '</div>' +
+
+    '<h3 style="margin-top:24px">সোশ্যাল মিডিয়া</h3>' +
+    '<div class="row row-3">' +
+    '<div class="form-group"><label>Facebook</label><input id="stFb" value="' + esc(s.facebook||'') + '"></div>' +
+    '<div class="form-group"><label>Twitter/X</label><input id="stTw" value="' + esc(s.twitter||'') + '"></div>' +
+    '<div class="form-group"><label>YouTube</label><input id="stYt" value="' + esc(s.youtube||'') + '"></div>' +
+    '<div class="form-group"><label>Instagram</label><input id="stIg" value="' + esc(s.instagram||'') + '"></div>' +
+    '<div class="form-group"><label>WhatsApp</label><input id="stWa" value="' + esc(s.whatsapp||'') + '"></div>' +
+    '<div class="form-group"><label>Telegram</label><input id="stTg" value="' + esc(s.telegram||'') + '"></div>' +
+    '</div>' +
+
+    '<h3 style="margin-top:24px">SEO</h3>' +
+    '<div class="form-group"><label>Meta Title</label>' +
+    '<input id="stMetaTitle" value="' + esc(s.metaTitle||'') + '"></div>' +
+    '<div class="form-group"><label>Meta Description</label>' +
+    '<textarea id="stMetaDesc">' + esc(s.metaDescription||'') + '</textarea></div>' +
+
+    '<button class="btn btn-pri mt-3" onclick="saveSettings()" id="stSave">💾 সেভ করুন</button>' +
+    '</div>';
+}
+
+window.saveSettings = async function(){
+  const data = {
+    siteName: $('#stName').value.trim(),
+    tagline: $('#stTagline').value.trim(),
+    logo: $('#stLogo').value.trim(),
+    description: $('#stDesc').value.trim(),
+    email: $('#stEmail').value.trim(),
+    phone: $('#stPhone').value.trim(),
+    address: $('#stAddr').value.trim(),
+    facebook: $('#stFb').value.trim(),
+    twitter: $('#stTw').value.trim(),
+    youtube: $('#stYt').value.trim(),
+    instagram: $('#stIg').value.trim(),
+    whatsapp: $('#stWa').value.trim(),
+    telegram: $('#stTg').value.trim(),
+    metaTitle: $('#stMetaTitle').value.trim(),
+    metaDescription: $('#stMetaDesc').value.trim(),
+    updatedAt: now()
+  };
+
+  const btn = $('#stSave');
+  btn.disabled = true; btn.textContent = 'সেভ হচ্ছে...';
+  try {
+    await db.ref('settings/site').update(data);
+    toast('সেটিংস সেভ হয়েছে ✓', 'ok');
+  } catch(e){ toast('সেভ ব্যর্থ', 'err'); }
+  finally { btn.disabled = false; btn.textContent = '💾 সেভ করুন'; }
+};
+
+console.log('[Admin Panel] loaded ✓ (WebView Compatible)');
+</script>
+</body>
+</html>

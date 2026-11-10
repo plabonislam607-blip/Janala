@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Janala News — খবর বাংলা</title>
+    <link>https://bdjanala.netlify.app/</link>
+    <description>বাংলাদেশ ও বিশ্বের সর্বশেষ খবর, বিশ্লেষণ ও প্রযুক্তি সংবাদ।</description>
+    <language>bn-BD</language>
+    <lastBuildDate>Tue, 13 Oct 2026 00:00:00 +0600</lastBuildDate>
+    <atom:link href="https://bdjanala.netlify.app/feed.xml" rel="self" type="application/rss+xml" />
+  </channel>
+</rss>

@@ -1,0 +1,27 @@
+{
+  "name": "Janala News — খবর বাংলা",
+  "short_name": "Janala",
+  "description": "বাংলাদেশ ও বিশ্বের সর্বশেষ খবর, প্রযুক্তি, বিনোদন ও লাইফস্টাইল।",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#FFFFFF",
+  "theme_color": "#C8102E",
+  "lang": "bn-BD",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

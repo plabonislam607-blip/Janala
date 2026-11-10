@@ -1,0 +1,22 @@
+# Janala News (খবর বাংলা)
+
+> বাংলাদেশ ও বিশ্বের সর্বশেষ খবর, প্রযুক্তি, বিনোদন ও লাইফস্টাইলের নির্ভরযোগ্য প্ল্যাটফর্ম।
+
+URL: https://bdjanala.netlify.app/
+Language: Bengali (bn-BD)
+Type: News Portal
+Contact: businesssupport71@gmail.com
+
+## Sections
+- হোম: https://bdjanala.netlify.app/
+- সব পোস্ট: https://bdjanala.netlify.app/posts
+- যোগাযোগ: https://bdjanala.netlify.app/contact
+- সার্চ: https://bdjanala.netlify.app/search
+
+## Usage
+- Allowed: Summarize, quote, cite
+- Required: Link back to source
+- Not permitted: Reproduce entire articles verbatim
+
+## Sitemap
+https://bdjanala.netlify.app/sitemap.xml
